@@ -133,27 +133,27 @@ del spectrograms_N_train_validation
 spectrograms_B_test_predict = model.predict(spectrograms_B_test / 255.0)
 spectrograms_B_test_wrong_predictions = [i for i,v in enumerate(spectrograms_B_test_predict) if v < 0.5]
 plt.hist(spectrograms_B_test_predict)
-print(1 - len(spectrograms_B_test_wrong_predictions) / len(spectrograms_B_test_predict))  ## 91.95%
+print(1 - len(spectrograms_B_test_wrong_predictions) / len(spectrograms_B_test_predict))
 
 spectrograms_F_test_predict = model.predict(spectrograms_F_test / 255.0)
 spectrograms_F_test_wrong_predictions = [i for i,v in enumerate(spectrograms_F_test_predict) if v > 0.5]
 plt.hist(spectrograms_F_test_predict)
-print(1 - len(spectrograms_F_test_wrong_predictions) / len(spectrograms_F_test_predict))  ## 97.18%
+print(1 - len(spectrograms_F_test_wrong_predictions) / len(spectrograms_F_test_predict))
 
 spectrograms_N_test_predict = model.predict(spectrograms_N_test / 255.0)
 spectrograms_N_test_wrong_predictions = [i for i,v in enumerate(spectrograms_N_test_predict) if v > 0.5]
 plt.hist(spectrograms_N_test_predict)
-print(1 - len(spectrograms_N_test_wrong_predictions) / len(spectrograms_N_test_predict))  ## 99.5%
+print(1 - len(spectrograms_N_test_wrong_predictions) / len(spectrograms_N_test_predict))
 
 
 tp = len([i for i,v in enumerate(spectrograms_B_test_predict) if v >= 0.5])
 fn = len([i for i,v in enumerate(spectrograms_B_test_predict) if v < 0.5])
 tn = len([i for i,v in enumerate(spectrograms_F_test_predict) if v < 0.5])
 fp = len([i for i,v in enumerate(spectrograms_F_test_predict) if v >= 0.5])
-precision = tp / (tp + fp)    #0.9422735346358793
-recall = tp / (tp + fn)       #0.9195333333333333
-accuracy = (tp + tn) / (tp + fp + tn + fn)    #0.9544
+precision = tp / (tp + fp) 
+recall = tp / (tp + fn)
+accuracy = (tp + tn) / (tp + fp + tn + fn) 
 
 y_true = [1] * len(spectrograms_B_test_predict) + [0] * len(spectrograms_F_test_predict)
 y_scores = spectrograms_B_test_predict + spectrograms_F_test_predict
-AUC = roc_auc_score(y_true, y_scores)  #0.9868107500000001
+AUC = roc_auc_score(y_true, y_scores) 
