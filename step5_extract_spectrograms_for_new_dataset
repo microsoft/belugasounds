@@ -10,7 +10,7 @@ from joblib import Parallel, delayed   ## version 0.12.0
 import multiprocessing
 import gc
 
-current_dir = "E:/Whale_Acoustics/"
+current_dir = "./Whale_Acoustics/"
 
 data_dir = current_dir + "Data/"
 audio_dir = data_dir + "Raw_Audio_Full_Analysis/" 
