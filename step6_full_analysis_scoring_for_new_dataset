@@ -15,7 +15,7 @@ import random
 import contextlib
 from keras.models import model_from_json
 
-current_dir = "E:/Whale_Acoustics/"
+current_dir = "./Whale_Acoustics/"
 
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
