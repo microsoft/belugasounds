@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import random
 
-current_dir = "E:/Whale_Acoustics/"
+current_dir = "./Whale_Acoustics/"
 
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
