@@ -19,7 +19,7 @@ import gc
 import random
 
 ############################### step 1: import the labelled data  #####################################
-current_dir = "E:/Whale_Acoustics/"
+current_dir = "./Whale_Acoustics/"
 
 data_dir = current_dir + "Data/"
 labeled_data_dir = data_dir + "Labeled_Data/"
