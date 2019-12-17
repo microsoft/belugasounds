@@ -22,7 +22,7 @@ from keras.models import model_from_json
 from scipy import optimize
 from sklearn.metrics import roc_auc_score
 
-current_dir = "E:/Whale_Acoustics/"
+current_dir = "./Whale_Acoustics/"
 
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
