@@ -26,6 +26,7 @@ current_dir = "./Whale_Acoustics/"
 
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
+output_dir = current_dir + 'Output/'
 spectrogram_dir = data_dir + "Extracted_Spectrogram/"
 output_spectrogram_vector_dir =  'Output_Spectrogram_Vector/'
 
@@ -140,9 +141,9 @@ opt_weights = optimize.minimize(loss_function,
 
 print('Optimum weights = ', opt_weights, 'with loss', loss_function(opt_weights))
 
-## [0.25287476, 0.2542572, 0.22889709, 0.26397095]
+## save the optimal weights of each individual model
 opt_weights[-1] = 1.0 - sum(opt_weights[:-1])  ## to force the total weights sums up to 1 
-
+np.savetxt(output_dir + 'opt_weights.out', opt_weights, delimiter=',')
 
 
 ###################### prediction on the test dataset ##############################
