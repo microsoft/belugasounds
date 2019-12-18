@@ -1,0 +1,10 @@
+numpy
+pandas
+glob2
+matplotlib
+joblib
+keras
+tensorflow
+multiprocess
+scipy
+scikit-learn
