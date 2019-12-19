@@ -146,8 +146,7 @@ print('Optimum weights = ', opt_weights, 'with loss', loss_function(opt_weights)
 
 ## save the optimal weights of each individual model
 opt_weights[-1] = 1.0 - sum(opt_weights[:-1])  ## to force the total weights sums up to 1 
-np.savetxt(output_dir + 'opt_weights.out', opt_weights, delimiter=',')
-
+pd.DataFrame(opt_weights).to_excel(output_dir + 'opt_weights.xlsx', header=False, index=False)
 
 ###################### prediction on the test dataset ##############################
 del X_train
