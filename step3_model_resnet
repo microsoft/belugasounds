@@ -19,7 +19,10 @@ from keras.callbacks import EarlyStopping
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.utils import np_utils
 from keras.models import model_from_json
+from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import auc
 
 current_dir = "./Whale_Acoustics/"
 
@@ -158,4 +161,25 @@ accuracy = (tp + tn) / (tp + fp + tn + fn)
 
 y_true = [1] * len(spectrograms_B_test_predict) + [0] * len(spectrograms_F_test_predict)
 y_scores = spectrograms_B_test_predict + spectrograms_F_test_predict
+
+# calculate ROC AUC
 AUC = roc_auc_score(y_true, y_scores) 
+print('AUC: %.4f' % AUC)
+# calculate ROC Curve
+fpr, tpr, thresholds = roc_curve(y_true, y_scores)
+plt.plot(fpr, tpr, marker='.')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.legend()
+plt.show()
+
+# calculate precision-recall curve
+precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
+precision_recall_auc = auc(recall, precision)
+print('Precesion Recall AUC: %.4f' % precision_recall_auc)
+# plot the precision-recall curves
+plt.plot(recall, precision, marker='.')
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.legend()
+plt.show()
