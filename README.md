@@ -1,4 +1,8 @@
-# Background
+# Introduction
+
+This project is collaborative work among AI for Earth team at Microsoft, AI for Good Research Lab at Microsoft, and NOAA (National Oceanographic and Atmospheric Administration) Alaska Fisheries Science Center. The goal is to build a machine learning model that automatically detects Cook Inlet beluga whale acoustic signals.
+
+
 
 # Run Scripts
 
