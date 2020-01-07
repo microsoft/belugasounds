@@ -3,6 +3,8 @@
 
 # Introduction
 
+In the U.S., there are five populations of beluga whales, all in Alaska. Of those five, the Cook Inlet population is the smallest and has declined by about seventy-five percent since 1979. This population was listed as an endangered species in 2008, with hopes that the population would begin to recover in the near future, but more than a decade later they continue to decline, with a current population estimate of 328 whales. Read more about Cook Inlet beluga whales here: https://www.fisheries.noaa.gov/video/species-spotlight-cook-inlet-beluga-whale
+
 This project is collaborative work among AI for Earth team at Microsoft, AI for Good Research Lab at Microsoft, and NOAA (National Oceanographic and Atmospheric Administration) Alaska Fisheries Science Center. The goal is to build a machine learning model that automatically detects Cook Inlet beluga whale acoustic signals.
 
 
