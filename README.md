@@ -28,7 +28,7 @@ We extracted spectrograms for each corresponding detection, and use them along w
 
 # Run Scripts
 
-There are 
+There are 6 Python scripts which are named sequentially (from step1 to step6), from extracting spectrograms to training individual CNN models and their ensembles. The scripts were implemented in Azure Deep Learning Virtual Machine (NC24: 224GB memory, 4GPU).
 
 # Contributing
 
