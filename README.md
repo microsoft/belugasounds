@@ -16,9 +16,13 @@ The original raw data was collected with hydrophones (i.e., underwater microphon
 # Methodology
 
 We extracted spectrograms for each corresponding detection, and use them along with the associated labels as input of the binary classification model. Four individual deep learning CNN models were trained (see below), as well as their ensemble model.
+
 •	Model 1: Built a CNN from scratch using AlexNet architecture.
+
 •	Model 2: Transfer learning with fine-tuning from a pre-trained VGG16 model.
+
 •	Model 3: Transfer learning with fine-tuning from a pre-trained ResNet50 model.
+
 •	Model 4: Transfer learning with fine-tuning from a pre-trained DenseNet model.
 
 
