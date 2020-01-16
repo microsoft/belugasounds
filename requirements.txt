@@ -8,3 +8,4 @@ tensorflow
 multiprocess
 scipy
 scikit-learn==0.22
+opencv-python
