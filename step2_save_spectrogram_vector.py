@@ -1,6 +1,13 @@
+#
+# save_spectrogram_vector.py
+#
+# Reformat spectraogram data into training-ready .csv files
+#
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
+#
 
+#%% Imports
 
 import os
 from fnmatch import fnmatch
@@ -8,16 +15,21 @@ import cv2
 import numpy as np
 import random
 
-current_dir = "./Whale_Acoustics/"
 
+#%% Path configuration
+
+current_dir = "./Whale_Acoustics/"
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
 spectrogram_dir = data_dir + "Extracted_Spectrogram/"
-output_spectrogram_vector_dir = 'Output_Spectrogram_Vector/'
+output_spectrogram_vector_dir = "Output_Spectrogram_Vector/"
 
 if not os.path.exists(data_dir + output_spectrogram_vector_dir):
     os.makedirs(data_dir + output_spectrogram_vector_dir)
 
+
+#%% Load spectrograms
+    
 spectrograms_B = []
 spectrograms_F = []
 spectrograms_N = []
@@ -52,7 +64,6 @@ for path, subdirs, files in os.walk(spectrogram_dir):
             pass
         index += 1
 
-
 print(len(spectrograms_B))
 print(len(spectrograms_F))
 print(len(spectrograms_N))
@@ -81,7 +92,8 @@ with open(data_dir + output_spectrogram_vector_dir + "filenames_N.csv",'w') as f
         f.write('\n')
 
 
-########################### generate random sample of those spectrograms for training (if use all of them, will yield MemoryError in building model) #####################
+#%% Generate a random sample of spectrograms for training
+        
 random.seed(40)
 spectrograms_B_sample_index = sorted(random.sample(range(len(filenames_B)), 50000))
 spectrograms_F_sample_index = sorted(random.sample(range(len(filenames_F)), 100000))
@@ -94,7 +106,6 @@ spectrograms_N_sample = spectrograms_N[spectrograms_N_sample_index]
 filenames_B_sample = np.asarray(filenames_B)[spectrograms_B_sample_index].tolist()
 filenames_F_sample = np.asarray(filenames_F)[spectrograms_F_sample_index].tolist()
 filenames_N_sample = np.asarray(filenames_N)[spectrograms_N_sample_index].tolist()
-
 
 np.save(data_dir + output_spectrogram_vector_dir + "spectrograms_B_sample_300_300", spectrograms_B_sample)
 np.save(data_dir + output_spectrogram_vector_dir + "spectrograms_F_sample_300_300", spectrograms_F_sample)

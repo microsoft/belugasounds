@@ -1,23 +1,21 @@
+#
+# model_ensemble.py
+#
+# Train the ensemble model
+#
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
+#
 
+#%% Imports
 
 from sklearn.model_selection import train_test_split
-import glob
-import os
 import csv
 import numpy as np
 import pandas as pd
-import tensorflow as tf
 import matplotlib.pyplot as plt
 
 # Keras imports
-from keras import models, layers, optimizers
-from keras.models import  Model, Sequential
-from keras.layers import Dense, Dropout, Flatten, Activation, GlobalAveragePooling2D, BatchNormalization
-from keras.callbacks import EarlyStopping
-from keras.layers.convolutional import Conv2D, MaxPooling2D
-from keras.utils import np_utils
 from keras.models import model_from_json
 from scipy import optimize
 from sklearn.metrics import roc_curve
@@ -25,22 +23,24 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import auc
 
-current_dir = "./Whale_Acoustics/"
 
+#%% Path configuration
+
+current_dir = "./Whale_Acoustics/"
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
 output_dir = current_dir + 'Output/'
 spectrogram_dir = data_dir + "Extracted_Spectrogram/"
-output_spectrogram_vector_dir =  'Output_Spectrogram_Vector/'
+output_spectrogram_vector_dir = "Output_Spectrogram_Vector/"
 
 
-##################################### step 1: train/validation/test split #######################
+#%% Step 1: train/validation/test split
+
 ncol, nrow = 300, 300
 
 spectrograms_B_sample = np.load(data_dir + output_spectrogram_vector_dir + "spectrograms_B_sample_300_300.npy")
 spectrograms_F_sample = np.load(data_dir + output_spectrogram_vector_dir + "spectrograms_F_sample_300_300.npy")
 spectrograms_N_sample = np.load(data_dir + output_spectrogram_vector_dir + "spectrograms_N_sample_300_300.npy")
-
 
 filenames_B_sample = []
 with open(data_dir + output_spectrogram_vector_dir + "filenames_B_sample.csv", newline='') as f:
@@ -77,33 +77,27 @@ print(spectrograms_F_test.shape)
 print(spectrograms_N_test.shape)
 
 
-##################################### step 2: load models #######################
+#%% Step 2: load models
 
 with open(model_dir + 'cnn_architecture_all_data.json', 'r') as f:
     model_cnn = model_from_json(f.read())
-# Load weights into the new model
 model_cnn.load_weights(model_dir + 'cnn_weights_all_data.h5')
-
 
 with open(model_dir + 'vgg16_architecture_all_data.json', 'r') as f:
     model_vgg16 = model_from_json(f.read())
-# Load weights into the new model
 model_vgg16.load_weights(model_dir + 'vgg16_weights_all_data.h5')
-
 
 with open(model_dir + 'ResNet50_architecture_all_data.json', 'r') as f:
     model_ResNet50 = model_from_json(f.read())
-# Load weights into the new model
 model_ResNet50.load_weights(model_dir + 'ResNet50_weights_all_data.h5')
 
 
 with open(model_dir + 'DenseNet121_architecture_all_data.json', 'r') as f:
     model_DenseNet121 = model_from_json(f.read())
-# Load weights into the new model
 model_DenseNet121.load_weights(model_dir + 'DenseNet121_weights_all_data.h5')
 
 
-##################################### step 3: predict on validation & test data-set #######################
+#%% Step 3: predict on the validation and test sets
 
 validation_predict_cnn = model_cnn.predict(X_validation) 
 validation_predict_cnn = [x for sublist in validation_predict_cnn.tolist() for x in sublist]
@@ -117,11 +111,9 @@ validation_predict_ResNet50 = [x for sublist in validation_predict_ResNet50.toli
 validation_predict_DenseNet121 = model_DenseNet121.predict(X_validation)
 validation_predict_DenseNet121 = [x for sublist in validation_predict_DenseNet121.tolist() for x in sublist]
 
-
 validation_predict = [validation_predict_cnn, validation_predict_vgg16, validation_predict_ResNet50, validation_predict_DenseNet121]
 
-
-### optimize weights for each model
+# Optimize weights for each model
 def f(weights):
     validation_predict_ensemble = np.average(validation_predict, axis=0, weights=weights)
     validation_predict_ensemble_class = [int(validation_predict_ensemble[i] > 0.5) for i in range(len(validation_predict_ensemble))]
@@ -144,11 +136,10 @@ opt_weights = optimize.minimize(loss_function,
 
 print('Optimum weights = ', opt_weights, 'with loss', loss_function(opt_weights))
 
-## save the optimal weights of each individual model
+# Save the optimal weights of each individual model
 opt_weights[-1] = 1.0 - sum(opt_weights[:-1])  ## to force the total weights sums up to 1 
 pd.DataFrame(opt_weights).to_excel(output_dir + 'opt_weights.xlsx', header=False, index=False)
 
-###################### prediction on the test dataset ##############################
 del X_train
 del X_validation
 del spectrograms_train_validation
@@ -189,7 +180,6 @@ spectrograms_F_test_predict_ResNet50 = [x for sublist in spectrograms_F_test_pre
 spectrograms_N_test_predict_ResNet50 = model_ResNet50.predict(spectrograms_N_test / 255.0)
 spectrograms_N_test_predict_ResNet50 = [x for sublist in spectrograms_N_test_predict_ResNet50.tolist() for x in sublist]
 
-
 ############### DenseNet121: prediction ##############
 spectrograms_B_test_predict_DenseNet121 = model_DenseNet121.predict(spectrograms_B_test / 255.0)
 spectrograms_B_test_predict_DenseNet121 = [x for sublist in spectrograms_B_test_predict_DenseNet121.tolist() for x in sublist]
@@ -199,7 +189,6 @@ spectrograms_F_test_predict_DenseNet121 = [x for sublist in spectrograms_F_test_
 
 spectrograms_N_test_predict_DenseNet121 = model_DenseNet121.predict(spectrograms_N_test / 255.0)
 spectrograms_N_test_predict_DenseNet121 = [x for sublist in spectrograms_N_test_predict_DenseNet121.tolist() for x in sublist]
-
 
 ############### emsemble: prediction ##############
 spectrograms_B_test_predict = [spectrograms_B_test_predict_cnn, spectrograms_B_test_predict_vgg16, spectrograms_B_test_predict_ResNet50, spectrograms_B_test_predict_DenseNet121]
@@ -248,10 +237,11 @@ accuracy = (tp + tn) / (tp + fp + tn + fn)
 y_true = [1] * len(spectrograms_B_test_predict_ensemble) + [0] * len(spectrograms_F_test_predict_ensemble)
 y_scores = spectrograms_B_test_predict_ensemble.tolist() + spectrograms_F_test_predict_ensemble.tolist()
 
-# calculate ROC AUC
+# Calculate ROC and AUC
 AUC = roc_auc_score(y_true, y_scores) 
 print('AUC: %.4f' % AUC)
-# calculate ROC Curve
+
+# Calculate ROC Curve
 fpr, tpr, thresholds = roc_curve(y_true, y_scores)
 plt.plot(fpr, tpr, marker='.')
 plt.xlabel('False Positive Rate')
@@ -259,25 +249,15 @@ plt.ylabel('True Positive Rate')
 plt.legend()
 plt.show()
 
-# calculate precision-recall curve
+# Calculate precision-recall curve
 precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
 precision_recall_auc = auc(recall, precision)
 print('Precesion Recall AUC: %.4f' % precision_recall_auc)
-# plot the precision-recall curves
+
+# Plot precision-recall curve
 plt.plot(recall, precision, marker='.')
 plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.legend()
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
 

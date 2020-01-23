@@ -1,62 +1,62 @@
+#
+# full_analysis_scoring_for_new_dataset.py
+#
+# Run trained models on a new data set for which spectrograms have already
+# been generated.
+#
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
+#
 
+#%% Imports
 
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
 import glob
 import os
-import wave
-import re
-from collections import Counter
 import cv2
-import pylab
-import matplotlib
-from matplotlib import pyplot
-import gc
-import random
-import contextlib
 from keras.models import model_from_json
+
+
+#%% Path configuration
 
 current_dir = "./Whale_Acoustics/"
 
 model_dir = current_dir + "Model/"
 data_dir = current_dir + "Data/"
 spectrogram_dir = data_dir + "Extracted_Spectrogram_Full_Analysis/" 
-output_dir = current_dir + 'Output/'
+output_dir = current_dir + "Output/"
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
+
+#%% Enumerate spectrograms to score
+    
 spectrogram_filenames = glob.glob(spectrogram_dir + '/*.png')
 print("Total number of Spectrograms: ", len(spectrogram_filenames))
 
 
+#%% Load models
 
 with open(model_dir + 'cnn_architecture_all_data.json', 'r') as f:
     model_cnn = model_from_json(f.read())
-# Load weights into the new model
 model_cnn.load_weights(model_dir + 'cnn_weights_all_data.h5')
-
 
 with open(model_dir + 'vgg16_architecture_all_data.json', 'r') as f:
     model_vgg16 = model_from_json(f.read())
-# Load weights into the new model
 model_vgg16.load_weights(model_dir + 'vgg16_weights_all_data.h5')
-
 
 with open(model_dir + 'ResNet50_architecture_all_data.json', 'r') as f:
     model_ResNet50 = model_from_json(f.read())
-# Load weights into the new model
 model_ResNet50.load_weights(model_dir + 'ResNet50_weights_all_data.h5')
-
 
 with open(model_dir + 'DenseNet121_architecture_all_data.json', 'r') as f:
     model_DenseNet121 = model_from_json(f.read())
-# Load weights into the new model
 model_DenseNet121.load_weights(model_dir + 'DenseNet121_weights_all_data.h5')
 
+
+#%% Run models on spectrograms
 
 ncol, nrow = 300, 300
 

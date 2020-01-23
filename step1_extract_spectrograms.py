@@ -1,26 +1,30 @@
+#
+# extract_spectrograms.py
+#
+# Load detection labels, extract audio for detection and non-detection regions,
+# compute and save spectrograms.
+#
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
+#
 
+#%% Imports
 
 import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
 import glob
 import os
 import wave
-import re
-from collections import Counter
-import cv2
 import pylab
-import matplotlib
 from matplotlib import pyplot
-from datetime import datetime, timedelta
 from joblib import Parallel, delayed
 import multiprocessing
 import gc
 import random
 
-############################### step 1: import the labelled data  #####################################
+
+#%% Step 1: import the labels
+
 current_dir = "./Whale_Acoustics/"
 
 data_dir = current_dir + "Data/"
@@ -41,7 +45,8 @@ print(detector_labelled_data.shape)
 #detector_labelled_data.Date.value_counts().sort_index()
 
 
-############################### step 2: match each labelled data to audio file #####################################
+#%% Step 2: match each labeled data segment to the corresponding audio file
+
 audio_filenames = glob.glob(audio_dir + '*.wav')
 audio_filenames = [os.path.basename(filename) for filename in audio_filenames]
 audio_filenames_df = pd.DataFrame(audio_filenames, columns = ['audio_filename'])
@@ -61,7 +66,7 @@ for index, row in audio_filenames_df.iterrows():
 audio_filenames_df['Date'] = audio_filenames_df['audio_start_TimeStamp'].str[:8]
 audio_filenames_df.Date.value_counts().sort_index()
 
-## transform to dictionary with format {audio_filename: ['audio_start_TimeStamp', 'audio_end_TimeStamp', 'audio_start_date']}
+# Transform to dictionary with format {audio_filename: ['audio_start_TimeStamp', 'audio_end_TimeStamp', 'audio_start_date']}
 audio_filenames_dict = audio_filenames_df.set_index('audio_filename').T.to_dict('list')
 
 detector_labelled_data['audio_filename'] = ''
@@ -78,15 +83,15 @@ for index, row in detector_labelled_data.iterrows():
 print(detector_labelled_data.audio_filename.value_counts())   
 
 
-############################### step 3: extract spectrograms from detection audio-parts #####################################
+#%% Step 3: extract spectrograms from detections
+
 matched_detector_labelled_data = detector_labelled_data.loc[(~detector_labelled_data.audio_filename.str.contains('No Matched Audio File')) & (~detector_labelled_data.audio_filename.str.contains('Multiple Matched Audio Files'))].reset_index(drop=True)
 print(matched_detector_labelled_data.shape)
 
 matched_detector_labelled_data_B_F = matched_detector_labelled_data.loc[(matched_detector_labelled_data.Species == 'B') | (matched_detector_labelled_data.Species == 'F')].reset_index(drop=True)
 print(matched_detector_labelled_data_B_F.shape)
 
-
-spectrogram_seconds_duration = 2   # extract spectrogram from audio file. Each slice of spectrogram is 2 seconds
+spectrogram_seconds_duration = 2 
 
 def get_wav_info(wav_file):
     wav = wave.open(wav_file, 'r')
@@ -105,8 +110,7 @@ def graph_spectrogram(wav_file, serialnumber, audio_begin_TimeStamp, start_secon
     pyplot.specgram(sound_info[frame_rate * start_second: frame_rate * (start_second+2)], Fs = frame_rate)
     pyplot.savefig(output_spectrogram_dir + serialnumber + '.' + audio_begin_TimeStamp + '_' + str(start_second)  + '_' + Species + '.png', bbox_inches='tight', transparent=True, pad_inches=0.0)
     pyplot.close()
-    gc.collect()   ## clear-up memory
-
+    gc.collect()
 
 def generate_spectrogram_B_F(i):
     Species = matched_detector_labelled_data_B_F.loc[i, 'Species']
@@ -127,28 +131,25 @@ def generate_spectrogram_B_F(i):
     detection_start_second = detection_start_timedelta.seconds
     return graph_spectrogram(audio_dir + audio_filename, serialnumber, audio_begin_TimeStamp, detection_start_second, Species)
 
-
 num_cores = multiprocessing.cpu_count()
 spectrograms_B_F = Parallel(n_jobs=num_cores)(delayed(generate_spectrogram_B_F)(i) for i in range(len(matched_detector_labelled_data_B_F)))
 
 
+#%% Step 4: extract spectrograms from non-detection audio regions
 
-############################### step 4: extract spectrograms from no-detection audios #####################################
 sample_size = 2500
 sound_detected_audio_filenames = detector_labelled_data.loc[~detector_labelled_data.audio_filename.str.contains('No Matched Audio File')].audio_filename.unique().tolist()
 nosound_detected_audio_filenames = [filename for filename in audio_filenames if filename not in sound_detected_audio_filenames]
-nosound_detected_audio_filenames_sample  = random.sample(nosound_detected_audio_filenames, min(len(nosound_detected_audio_filenames), sample_size))
+nosound_detected_audio_filenames_sample = random.sample(nosound_detected_audio_filenames, min(len(nosound_detected_audio_filenames), sample_size))
 
-### extract sample of "N" spectrograms
 def generate_spectrogram_N(i):
     audio_filename = nosound_detected_audio_filenames_sample[i]
     Species = 'N'
-    serialnumber, audio_begin_TimeStamp = audio_filename.split('.')[0:2]
-    start_second = random.sample(range(0, 299), 1)[0]      ## each audio file is 5-minute. Sample the starting time-stampe between second 0 - 299.
+    serialnumber, audio_begin_TimeStamp = audio_filename.split('.')[0:2]    
+    # Each audio file is five minutes; sample the starting timestamp between second 0 - 299
+    start_second = random.sample(range(0, 299), 1)[0]      
     return graph_spectrogram(audio_dir + audio_filename, serialnumber, audio_begin_TimeStamp, start_second, Species)
-
 
 num_cores = multiprocessing.cpu_count()
 spectrograms_N = Parallel(n_jobs=num_cores)(delayed(generate_spectrogram_N)(i) for i in range(len(nosound_detected_audio_filenames_sample)))
  
-
