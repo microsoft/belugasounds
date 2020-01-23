@@ -1,5 +1,5 @@
 ![header image](belugawhale.JPG)
-
+Photo: Chris Garner, Joint Base Elmendorf–Richardson
 
 # Introduction
 
