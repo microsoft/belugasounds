@@ -155,7 +155,7 @@ recall = tp / (tp + fn)
 accuracy = (tp + tn) / (tp + fp + tn + fn)
 
 y_true = [1] * len(spectrograms_B_test_predict) + [0] * len(spectrograms_F_test_predict)
-y_scores = spectrograms_B_test_predict + spectrograms_F_test_predict
+y_scores = spectrograms_B_test_predict.tolist() + spectrograms_F_test_predict.tolist()
 
 # Calculate ROC and AUC
 AUC = roc_auc_score(y_true, y_scores) 
