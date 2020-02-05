@@ -82,8 +82,8 @@ for index, row in full_analysis_score.iterrows():
     predict_prob_DenseNet121 = model_DenseNet121.predict(np.asarray(img_reshaped) / 255.0).tolist()[0][0]
     ## the opmized weight for each model was computed in previous step
     predicted_probability = sum([x*y for x,y in zip([predict_prob_cnn, predict_prob_vgg16, predict_prob_ResNet50, predict_prob_DenseNet121], opt_weights)])
-    full_analysis_score.set_value(index, 'audio_filename', audio_filename)
-    full_analysis_score.set_value(index, 'spectrogram_start_second', spectrogram_start_second)
-    full_analysis_score.set_value(index, 'predicted_probability', predicted_probability)
+    full_analysis_score.at(index, 'audio_filename', audio_filename)
+    full_analysis_score.at(index, 'spectrogram_start_second', spectrogram_start_second)
+    full_analysis_score.at(index, 'predicted_probability', predicted_probability)
 
 full_analysis_score.to_excel(output_dir + 'full_analysis_ouptut_predicted_scores.xlsx', index=False)
