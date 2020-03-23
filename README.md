@@ -29,6 +29,8 @@ We extracted spectrograms for each detection, and use them along with the associ
 
 There are six Python scripts which are named sequentially (from step1 to step6), from extracting spectrograms to training individual CNN models and the ensemble.
 
+# Publication
+Zhong, Castellote, Dodhia, Lavista Ferrer, Keogh, Brewer. In Press. Beluga Whale Acoustic Signal Classification using Deep Learning  Neural Network Models. Journal of the Acoustical Society of America.
 
 # Contributing
 
