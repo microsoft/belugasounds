@@ -31,7 +31,7 @@ There are six Python scripts which are named sequentially (from step1 to step6),
 
 # Publications
 
-Zhong M, Catellote M, Dodhia R, Lavista J, Keogh M, Brewer A. <a href="https://asa.scitation.org/doi/abs/10.1121/10.0000921?journalCode=jas">Beluga whale acoustic signal classification using deep learning neural network models</a>. The Journal of the Acoustical Society of America 147, 1834 (2020).
+Zhong M, Catellote M, Dodhia R, Lavista Ferres J, Keogh M, Brewer A. <a href="https://asa.scitation.org/doi/abs/10.1121/10.0000921?journalCode=jas">Beluga whale acoustic signal classification using deep learning neural network models</a>. The Journal of the Acoustical Society of America 147, 1834 (2020).
 
 # Blogs and media
 
