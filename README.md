@@ -29,8 +29,17 @@ We extracted spectrograms for each detection, and use them along with the associ
 
 There are six Python scripts which are named sequentially (from step1 to step6), from extracting spectrograms to training individual CNN models and the ensemble.
 
-# Publication
-Zhong, Castellote, Dodhia, Lavista Ferrer, Keogh, Brewer. In Press. Beluga Whale Acoustic Signal Classification using Deep Learning  Neural Network Models. Journal of the Acoustical Society of America.
+# Publications
+
+Zhong M, Catellote M, Dodhia R, Lavista J, Keogh M, Brewer A. <a href="https://asa.scitation.org/doi/abs/10.1121/10.0000921?journalCode=jas">Beluga whale acoustic signal classification using deep learning neural network models</a>. The Journal of the Acoustical Society of America 147, 1834 (2020).
+
+# Blogs and media
+
+“<a href="https://www.fisheries.noaa.gov/feature-story/using-artificial-intelligence-identify-endangered-beluga-whales">Using Artificial Intelligence to Identify Endangered Beluga Whales</a>”. NOAA Fisheries News.
+
+“<a href="https://news.microsoft.com/features/artificial-intelligence-makes-a-splash-in-efforts-to-protect-alaskas-ice-seals-and-beluga-whales/">Artificial intelligence makes a splash in efforts to protect Alaska’s ice seals and beluga whales</a>”. Microsoft News.
+
+“<a href="https://federalnewsnetwork.com/artificial-intelligence/2020/03/using-ai-to-protect-endangered-species/">AI is helping protect endangered species</a>”. Federal News Network.
 
 # Contributing
 
