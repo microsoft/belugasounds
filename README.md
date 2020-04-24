@@ -41,6 +41,9 @@ Zhong M, Catellote M, Dodhia R, Lavista Ferres J, Keogh M, Brewer A. <a href="ht
 
 “<a href="https://federalnewsnetwork.com/artificial-intelligence/2020/03/using-ai-to-protect-endangered-species/">AI is helping protect endangered species</a>”. Federal News Network.
 
+“<a href="https://medium.com/microsoftazure/helping-scientists-protect-beluga-whales-with-deep-learning-da897e78bbb9">Helping Scientists Protect Beluga Whales with Deep Learning</a>”. Azure Medium Blog.
+
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
